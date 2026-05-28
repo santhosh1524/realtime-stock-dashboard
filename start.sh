@@ -1,4 +1,5 @@
 #!/bin/bash
+# Keep script going to log errors before exiting
 set -e
 
 # Resolve PostgreSQL binaries path on Debian
@@ -44,8 +45,17 @@ if [ ! -f /app/pg_data/PG_VERSION ]; then
   echo "host all all 127.0.0.1/32 trust" >> /app/pg_data/pg_hba.conf
 fi
 
-# Boot PostgreSQL
-run_as_user "pg_ctl -D /app/pg_data -o \"-p 5432 -h 127.0.0.1\" start -l /app/pg_data/pg.log"
+# Boot PostgreSQL. Override unix_socket_directories to /tmp to avoid root-owned directory blocks
+echo "⚙️  Starting PG server process..."
+if ! run_as_user "pg_ctl -D /app/pg_data -o \"-p 5432 -h 127.0.0.1 -c unix_socket_directories='/tmp'\" start -l /app/pg_data/pg.log"; then
+  echo "❌ PostgreSQL failed to start. Dumping database startup logs (/app/pg_data/pg.log):"
+  if [ -f /app/pg_data/pg.log ]; then
+    cat /app/pg_data/pg.log
+  else
+    echo "No log file found at /app/pg_data/pg.log"
+  fi
+  exit 1
+fi
 
 # Wait for PostgreSQL to be active
 echo "⏳ Waiting for PostgreSQL to boot..."
