@@ -39,15 +39,19 @@ export default function CandlestickChart({ historicalData, activeSymbol }) {
     if (!historicalData || historicalData.length === 0 || !containerRef.current) return;
 
     // Process data and apply overlay indicators
-    let processedData = historicalData.map(d => ({
-      ...d,
-      date: new Date(d.bucket),
-      open: parseFloat(d.open),
-      high: parseFloat(d.high),
-      low: parseFloat(d.low),
-      close: parseFloat(d.close),
-      volume: parseInt(d.volume)
-    }));
+    let processedData = historicalData
+      .map(d => ({
+        ...d,
+        date: new Date(d.bucket),
+        open: parseFloat(d.open),
+        high: parseFloat(d.high),
+        low: parseFloat(d.low),
+        close: parseFloat(d.close),
+        volume: parseInt(d.volume)
+      }))
+      .filter(d => !isNaN(d.open) && !isNaN(d.high) && !isNaN(d.low) && !isNaN(d.close) && !isNaN(d.volume));
+
+    if (processedData.length === 0) return;
 
     processedData = calculateSMA(processedData, 10); // 10-period SMA
     processedData = calculateEMA(processedData, 20); // 20-period EMA
@@ -180,7 +184,7 @@ export default function CandlestickChart({ historicalData, activeSymbol }) {
     
     // SMA-10 (Cyan line)
     const smaLine = d3.line()
-      .defined(d => d.sma !== null)
+      .defined(d => d.sma !== null && d.sma !== undefined && !isNaN(d.sma))
       .x(d => xScale(d.date) + xScale.bandwidth() / 2)
       .y(d => yScale(d.sma));
 
@@ -194,7 +198,7 @@ export default function CandlestickChart({ historicalData, activeSymbol }) {
 
     // EMA-20 (Indigo line)
     const emaLine = d3.line()
-      .defined(d => d.ema !== null)
+      .defined(d => d.ema !== null && d.ema !== undefined && !isNaN(d.ema))
       .x(d => xScale(d.date) + xScale.bandwidth() / 2)
       .y(d => yScale(d.ema));
 
