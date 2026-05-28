@@ -1,3 +1,12 @@
+---
+title: Realtime Stock Dashboard
+emoji: 📈
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+---
+
 # ApexTrade: Real-Time Stock Analytics Dashboard
 
 ApexTrade is an enterprise-grade real-time stock analytics platform streaming live simulated market feeds (AAPL, MSFT, GOOGL, AMZN, TSLA) to a modern dashboard panel. The project leverages **React**, **Node.js**, **PostgreSQL** for historical aggregate timeseries, **Redis** for caching high-frequency REST APIs, and **D3.js** for high-performance interactive charting.
