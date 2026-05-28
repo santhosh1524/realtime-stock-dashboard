@@ -50,7 +50,7 @@ export default function OrderBook({ orderBook, spotPrice, changePercent }) {
                 className="ob-row ask" 
                 style={{ '--depth-pct': depthPct }}
               >
-                <span style={{ color: 'var(--trend-down)' }}>{ask.price.toFixed(2)}</span>
+                <span style={{ color: 'var(--trend-down)' }}>{ask.price?.toFixed(2) ?? '0.00'}</span>
                 <span className="text-right">{ask.size.toLocaleString()}</span>
                 <span className="text-right" style={{ color: 'var(--text-muted)' }}>
                   {(ask.price * ask.size).toLocaleString(undefined, { maximumFractionDigits: 0 })}
@@ -68,17 +68,17 @@ export default function OrderBook({ orderBook, spotPrice, changePercent }) {
               fontWeight: '700', 
               color: isUp ? 'var(--trend-up)' : 'var(--trend-down)' 
             }}>
-              ${spotPrice.toFixed(2)}
+              ${spotPrice?.toFixed(2) ?? '0.00'}
             </span>
             <span style={{ 
               fontSize: '11px', 
               color: isUp ? 'var(--trend-up)' : 'var(--trend-down)' 
             }}>
-              {isUp ? '▲' : '▼'} {isUp ? '+' : ''}{changePercent.toFixed(2)}%
+              {isUp ? '▲' : '▼'} {isUp ? '+' : ''}{changePercent?.toFixed(2) ?? '0.00'}%
             </span>
           </div>
           <div>
-            Spread: <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-main)' }}>${spreadValue.toFixed(2)} ({spreadPercent.toFixed(2)}%)</span>
+            Spread: <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-main)' }}>${spreadValue?.toFixed(2) ?? '0.00'} ({spreadPercent?.toFixed(2) ?? '0.00'}%)</span>
           </div>
         </div>
 
@@ -92,7 +92,7 @@ export default function OrderBook({ orderBook, spotPrice, changePercent }) {
                 className="ob-row bid" 
                 style={{ '--depth-pct': depthPct }}
               >
-                <span style={{ color: 'var(--trend-up)' }}>{bid.price.toFixed(2)}</span>
+                <span style={{ color: 'var(--trend-up)' }}>{bid.price?.toFixed(2) ?? '0.00'}</span>
                 <span className="text-right">{bid.size.toLocaleString()}</span>
                 <span className="text-right" style={{ color: 'var(--text-muted)' }}>
                   {(bid.price * bid.size).toLocaleString(undefined, { maximumFractionDigits: 0 })}

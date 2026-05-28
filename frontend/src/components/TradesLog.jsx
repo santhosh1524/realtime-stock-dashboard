@@ -34,7 +34,7 @@ export default function TradesLog({ trades }) {
                   fontWeight: '600', 
                   color: isBuy ? 'var(--trend-up)' : 'var(--trend-down)' 
                 }}>
-                  ${trade.price.toFixed(2)}
+                  ${trade.price?.toFixed(2) ?? '0.00'}
                 </span>
                 <span className="text-right" style={{ color: 'var(--text-main)' }}>
                   {trade.size.toLocaleString()} Units

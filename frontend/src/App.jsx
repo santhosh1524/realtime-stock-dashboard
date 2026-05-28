@@ -301,11 +301,11 @@ export default function App() {
                 
                 <div className="ticker-values">
                   <div className={`ticker-price ${isUp ? 'change-up' : 'change-down'}`}>
-                    ${activeStockDetail.price.toFixed(2)}
+                    ${activeStockDetail.price?.toFixed(2) ?? '0.00'}
                   </div>
                   <div className={`ticker-change ${isUp ? 'change-up' : 'change-down'}`}>
                     <span>{isUp ? '▲' : '▼'}</span>
-                    <span>{isUp ? '+' : ''}{activeStockDetail.change.toFixed(2)} ({activeStockDetail.changePercent.toFixed(2)}%)</span>
+                    <span>{isUp ? '+' : ''}{activeStockDetail.change?.toFixed(2) ?? '0.00'} ({activeStockDetail.changePercent?.toFixed(2) ?? '0.00'}%)</span>
                   </div>
                 </div>
               </div>
@@ -320,19 +320,19 @@ export default function App() {
               <div className="ticker-stats-grid">
                 <div className="stat-item">
                   <span className="stat-label">Open</span>
-                  <span className="stat-value">${activeStockDetail.open.toFixed(2)}</span>
+                  <span className="stat-value">${activeStockDetail.open?.toFixed(2) ?? '0.00'}</span>
                 </div>
                 <div className="stat-item">
                   <span className="stat-label">High</span>
-                  <span className="stat-value" style={{ color: 'var(--trend-up)' }}>${activeStockDetail.high.toFixed(2)}</span>
+                  <span className="stat-value" style={{ color: 'var(--trend-up)' }}>${activeStockDetail.high?.toFixed(2) ?? '0.00'}</span>
                 </div>
                 <div className="stat-item">
                   <span className="stat-label">Low</span>
-                  <span className="stat-value" style={{ color: 'var(--trend-down)' }}>${activeStockDetail.low.toFixed(2)}</span>
+                  <span className="stat-value" style={{ color: 'var(--trend-down)' }}>${activeStockDetail.low?.toFixed(2) ?? '0.00'}</span>
                 </div>
                 <div className="stat-item">
                   <span className="stat-label">Volume</span>
-                  <span className="stat-value">{activeStockDetail.volume.toLocaleString()}</span>
+                  <span className="stat-value">{activeStockDetail.volume?.toLocaleString() ?? '0'}</span>
                 </div>
               </div>
             )}

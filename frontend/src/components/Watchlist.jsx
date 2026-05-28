@@ -75,10 +75,10 @@ export default function Watchlist({ stocks, activeSymbol, onSelect }) {
               </div>
               
               <div className="watchlist-data">
-                <div className="watchlist-price">${stock.price.toFixed(2)}</div>
+                <div className="watchlist-price">${stock.price?.toFixed(2) ?? '0.00'}</div>
                 <div className={`watchlist-percent ${isUp ? 'change-up' : 'change-down'}`} style={{ display: 'flex', alignItems: 'center', gap: '2px', justifyContent: 'flex-end' }}>
                   {isUp ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
-                  {isUp ? '+' : ''}{stock.changePercent.toFixed(2)}%
+                  {isUp ? '+' : ''}{stock.changePercent?.toFixed(2) ?? '0.00'}%
                 </div>
               </div>
             </div>
