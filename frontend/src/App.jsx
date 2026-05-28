@@ -17,10 +17,42 @@ export default function App() {
   const wsRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
 
+  // Dynamic backend host configuration resolver
+  const getBackendUrls = () => {
+    const hostname = window.location.hostname;
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+    
+    if (isLocalhost) {
+      // Local dev config
+      const port = window.location.port === '3000' ? '5000' : window.location.port;
+      return {
+        apiBase: window.location.port === '3000' ? 'http://localhost:5000' : '',
+        wsUrl: `ws://${hostname}:${port || '5000'}`
+      };
+    }
+    
+    const isHuggingFace = hostname.endsWith('hf.space');
+    if (isHuggingFace) {
+      const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      return {
+        apiBase: '',
+        wsUrl: `${wsProtocol}//${window.location.host}`
+      };
+    }
+    
+    // GitHub Pages or other external client -> route straight to Hugging Face Spaces app backend
+    return {
+      apiBase: 'https://santhsoh1-realtime-stock-dashboard.hf.space',
+      wsUrl: 'wss://santhsoh1-realtime-stock-dashboard.hf.space'
+    };
+  };
+
+  const { apiBase, wsUrl } = getBackendUrls();
+
   // Fetch initial REST data for historical candles
   const fetchHistoricalData = async (symbol) => {
     try {
-      const response = await fetch(`/api/stocks/${symbol}/candles?resolution=1m&limit=60`);
+      const response = await fetch(`${apiBase}/api/stocks/${symbol}/candles?resolution=1m&limit=60`);
       const resData = await response.json();
       if (resData && resData.data) {
         setHistoricalData(resData.data);
@@ -60,7 +92,7 @@ export default function App() {
   // Fetch API Health Status
   const checkHealthStatus = async () => {
     try {
-      const response = await fetch('/api/health');
+      const response = await fetch(`${apiBase}/api/health`);
       const data = await response.json();
       if (data && data.features) {
         setHealthStatus(data.features);
@@ -73,13 +105,7 @@ export default function App() {
 
   // Establish WebSocket Connection with auto-reconnect
   const connectWebSocket = () => {
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    // If we're on port 3000 (Vite), connect to backend port 5000. Otherwise use standard host
-    const wsHost = window.location.port === '3000' ? `${window.location.hostname}:5000` : window.location.host;
-    const wsUrl = `${wsProtocol}//${wsHost}`;
-
     console.log(`🔌 Establishing WebSocket connection to ${wsUrl}...`);
-    
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
