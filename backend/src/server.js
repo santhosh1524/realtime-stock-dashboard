@@ -201,6 +201,25 @@ app.get('/api/stocks/:symbol/candles', async (req, res) => {
   });
 });
 
+const path = require('path');
+
+// Serve static frontend assets if they exist (Production)
+const frontendDistPath = path.join(__dirname, '../../frontend/dist');
+app.use(express.static(frontendDistPath));
+
+// For Single Page Application support (Vite routing client-side fallback)
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api/')) {
+    return next();
+  }
+  res.sendFile(path.join(frontendDistPath, 'index.html'), (err) => {
+    if (err) {
+      // Fallback if frontend is not built/available locally during API tests
+      res.status(404).send('Frontend not built. Run npm run build in frontend directory.');
+    }
+  });
+});
+
 // Boot server
 initializeServers().then(() => {
   server.listen(port, () => {
